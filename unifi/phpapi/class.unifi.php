@@ -132,15 +132,26 @@ class unifiapi {
 
    /*
    Authorize a MAC address
-   parameter <MAC address>,<minutes until expires from now>
+   parameter <MAC address>,<minutes until expires from now>[,<upload bandwidth in kbps>][,<download bandwidth in kbps]
+   	[,<bytes quota>]
    return true on success
    */
-   public function authorize_guest($mac,$minutes) {
+   public function authorize_guest($mac,$minutes,$up=0,$down=0,$bytes=0) {
       if (!$this->is_loggedin) return false;
+      $json = array('cmd' => 'authorize-guest', 'mac' => $mac, 'minutes' => $minutes);
+      if ($up > 0) {
+         $json += array('up'=>$up);
+      }
+      if ($down > 0) {
+         $json += array('down'=>$down);
+      }
+      if ($bytes > 0) {
+         $json += array('bytes'=>$bytes);
+      }
       $mac              = strtolower($mac);
       $return           = false;
-      $json             = json_encode(array('cmd' => 'authorize-guest', 'mac' => $mac, 'minutes' => $minutes));
-      $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/cmd/stamgr","json=".$json);
+      $json             = json_encode($json);
+      $content          = $his->exec_curl($this->baseurl."/api/s/".$this->site."/cmd/stamgr","json=".$json);
       $content_decoded  = json_decode($content);
       if (isset($content_decoded->meta->rc)) {
          if ($content_decoded->meta->rc == "ok") {
@@ -1006,6 +1017,18 @@ class unifiapi {
          }
       }
       return $return;
+   }
+   
+   /*
+   delete voucher
+   returns false on error array of data returned by unifi controller
+   */
+   public function delete_voucher($id) {
+      if (!$this->is_loggedin || $id == NULL || $id == '') return false;
+      $json             = json_encode(array('cmd' => 'delete-voucher', '_id' => $id));
+      $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/cmd/hotspot","json=".$json);
+      // TODO: use true or false on return, see authorize_guest return
+      return json_decode($content);
    }
 
    private function exec_curl($url, $data = "") {
