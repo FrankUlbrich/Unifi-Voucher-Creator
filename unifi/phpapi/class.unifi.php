@@ -151,7 +151,7 @@ class unifiapi {
       $mac              = strtolower($mac);
       $return           = false;
       $json             = json_encode($json);
-      $content          = $his->exec_curl($this->baseurl."/api/s/".$this->site."/cmd/stamgr","json=".$json);
+      $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/cmd/stamgr","json=".$json);
       $content_decoded  = json_decode($content);
       if (isset($content_decoded->meta->rc)) {
          if ($content_decoded->meta->rc == "ok") {
