@@ -257,7 +257,7 @@ class unifiapi {
    - "bytes" are no longer returned with controller version 4.9.1 and later
    */
    public function stat_daily_site($start = NULL, $end = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $end              = is_null($end) ? ((time()-(time() % 3600))*1000) : $end;
       $start            = is_null($start) ? $end-(52*7*24*3600*1000) : $start;
@@ -285,7 +285,7 @@ class unifiapi {
    - "bytes" are no longer returned with controller version 4.9.1 and later
    */
    public function stat_hourly_site($start = NULL, $end = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $end              = is_null($end) ? ((time())*1000) : $end;
       $start            = is_null($start) ? $end-(7*24*3600*1000) : $start;
@@ -314,7 +314,7 @@ class unifiapi {
    - Unifi controller does not keep these stats longer than 5 hours with versions < 4.6.6
    */
    public function stat_hourly_aps($start = NULL, $end = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $end              = is_null($end) ? ((time())*1000) : $end;
       $start            = is_null($start) ? $end-(7*24*3600*1000) : $start;
@@ -341,7 +341,7 @@ class unifiapi {
    returns an array of login session objects   
    */
    public function stat_sessions($start = NULL, $end = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $end              = is_null($end) ? time() : $end;
       $start            = is_null($start) ? $end-(7*24*3600) : $start;
@@ -368,7 +368,7 @@ class unifiapi {
    returns an array of authorization objects
    */
    public function stat_auths($start = NULL, $end = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $end              = is_null($end) ? time() : $end;
       $start            = is_null($start) ? $end-(7*24*3600) : $start;
@@ -396,7 +396,7 @@ class unifiapi {
    - the returned stats per client are all-time totals, irrespective of the "within" value
    */
    public function stat_allusers($historyhours = 8760) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array('type' => 'all', 'conn' => 'all', 'within' => $historyhours));
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/alluser','json='.$json));
@@ -418,7 +418,7 @@ class unifiapi {
    required parameter <within> = time frame in hours to go back to list guests with valid access (default = 24*365 hours)
    */
    public function list_guests_within($within) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array('within' => $within));
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/guest','json='.$json));
@@ -439,7 +439,7 @@ class unifiapi {
    returns an array of client objects
    */
    public function list_guests() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/stat/guest","json=".$json);
@@ -461,7 +461,7 @@ class unifiapi {
    returns a array of client objects
    */
    public function list_clients() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/stat/sta","json=".$json);
@@ -484,7 +484,7 @@ class unifiapi {
    returns an object with the client information
    */
    public function stat_client($client_mac) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = false;
 	    $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/user/'.$client_mac));
       if (isset($content_decoded->meta->rc)) {
@@ -504,7 +504,7 @@ class unifiapi {
    returns an array of user group objects
    */
    public function list_usergroups() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/list/usergroup'));
       if (isset($content_decoded->meta->rc)) {
@@ -543,7 +543,7 @@ class unifiapi {
    returns a array of health metric objects
    */
    public function list_health() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/stat/health","json=".$json);
@@ -565,7 +565,7 @@ class unifiapi {
    returns an array of dashboard metric objects (available since controller version 4.9.1.alpha)
    */
    public function list_dashboard() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/dashboard'));
       if (isset($content_decoded->meta->rc)) {
@@ -585,7 +585,7 @@ class unifiapi {
    returns a array of known user objects
    */
    public function list_users() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/user","json=".$json);
@@ -608,7 +608,7 @@ class unifiapi {
    optional parameter <device_mac> = the MAC address of a single device for which the call must be made
    */
    public function list_aps($device_mac = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/device/'.$device_mac));
       if (isset($content_decoded->meta->rc)) {
@@ -629,7 +629,7 @@ class unifiapi {
    returns an array of known rogue access point objects
    */
    public function list_rogueaps($within = '24') {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array('within' => $within));
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/rogueap','json='.$json));
@@ -650,7 +650,7 @@ class unifiapi {
    returns a list sites hosted on this controller with some details
    */
    public function list_sites() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/self/sites");
       $content_decoded  = json_decode($content);
@@ -694,7 +694,7 @@ class unifiapi {
    returns a array of known wlan_groups
    */
    public function list_wlan_groups() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/wlangroup");
       $content_decoded  = json_decode($content);
@@ -715,7 +715,7 @@ class unifiapi {
    returns a array of known sysinfo data
    */
    public function stat_sysinfo() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/stat/sysinfo");
       $content_decoded  = json_decode($content);
@@ -736,7 +736,7 @@ class unifiapi {
    returns an array of information about the logged in user
    */
    public function list_self() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/self'));
       if (isset($content_decoded->meta->rc)) {
@@ -756,7 +756,7 @@ class unifiapi {
    returns an array of network configuration data
    */
    public function list_networkconf() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/list/networkconf'));
       if (isset($content_decoded->meta->rc)) {
@@ -777,7 +777,7 @@ class unifiapi {
    returns an array of hotspot voucher objects
    */
    public function stat_voucher($create_time = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       if (trim($create_time) != NULL) {
@@ -801,7 +801,7 @@ class unifiapi {
    returns an array of hotspot payments
    */
    public function stat_payment() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/payment'));
       if (isset($content_decoded->meta->rc)) {
@@ -821,7 +821,7 @@ class unifiapi {
    returns an array of hotspot operators
    */
    public function list_hotspotop() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/list/hotspotop'));
       if (isset($content_decoded->meta->rc)) {
@@ -847,7 +847,7 @@ class unifiapi {
    returns an array of vouchers codes (NOTE: without the "-" in the middle)
    */
    public function create_voucher($minutes, $number_of_vouchers_to_create = 1, $note = NULL, $up = NULL, $down = NULL, $MBytes = NULL) {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return   = array();
       $json     = array('cmd' => 'create-voucher', 'expire' => $minutes, 'n' => $number_of_vouchers_to_create);
 
@@ -877,7 +877,7 @@ class unifiapi {
    returns an array of port forwarding stats
    */
    public function list_portforward_stats() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content_decoded  = json_decode($this->exec_curl($this->baseurl.'/api/s/'.$this->site.'/stat/portforward'));
       if (isset($content_decoded->meta->rc)) {
@@ -897,7 +897,7 @@ class unifiapi {
    returns a array of the site port forwarding settings
    */
    public function list_portforwarding() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/portforward");
       $content_decoded  = json_decode($content);
@@ -918,7 +918,7 @@ class unifiapi {
    returns a array of the site port dynamic dns settings
    */
    public function list_dynamicdns() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/dynamicdns");
       $content_decoded  = json_decode($content);
@@ -939,7 +939,7 @@ class unifiapi {
    returns a array of the site port configuration
    */
    public function list_portconf() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/portconf");
       $content_decoded  = json_decode($content);
@@ -960,7 +960,7 @@ class unifiapi {
    returns a array of the site VoIP extensions
    */
    public function list_extension() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/extension");
       $content_decoded  = json_decode($content);
@@ -981,7 +981,7 @@ class unifiapi {
    returns a array of the site configuration settings
    */
    public function list_settings() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/get/setting");
       $content_decoded  = json_decode($content);
@@ -1194,7 +1194,7 @@ class unifiapi {
    returns a array of known events
    */
    public function list_events() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/stat/event","json=".$json);
@@ -1216,7 +1216,7 @@ class unifiapi {
    returns a array of wireless networks and settings
    */
    public function list_wlanconf() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/wlanconf","json=".$json);
@@ -1238,7 +1238,7 @@ class unifiapi {
    returns a array of known alarms
    */
    public function list_alarms() {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       $content          = $this->exec_curl($this->baseurl."/api/s/".$this->site."/list/alarm","json=".$json);
@@ -1260,7 +1260,7 @@ class unifiapi {
    returns a array of voucher objects
    */
    public function get_vouchers($create_time="") {
-      if (!$this->is_loggedin) return false;
+      if (!$this->is_loggedin) return [];
       $return           = array();
       $json             = json_encode(array());
       if (trim($create_time) != "") {
